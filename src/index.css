@@ -1,0 +1,199 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-color: #202c37;
+  --secondary-color: #f6f8fa;
+  --input_light: #858585;
+  --el_dark: #2b3945;
+  --text_light: #111517;
+  --white: #fff;
+}
+
+.dot::after {
+  content: "";
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.dot {
+  animation: spin 2s infinite;
+  inset: 0;
+}
+
+.dot:nth-child(2) {
+  animation-delay: 100ms;
+}
+
+.dot:nth-child(3) {
+  animation-delay: 200ms;
+}
+
+.dot:nth-child(4) {
+  animation-delay: 300ms;
+}
+
+.dot:nth-child(5) {
+  animation-delay: 400ms;
+}
+
+.ui-checkbox {
+  --checkbox-diameter: 20px;
+  --checkbox-border-radius: 5px;
+  --checkbox-border-color: #d9d9d9;
+  --checkbox-border-width: 1px;
+  --checkbox-border-style: solid;
+  --checkmark-size: 1.2;
+  border-radius: var(--checkbox-border-radius);
+  background: var(--secondary-color);
+  border: var(--checkbox-border-width) var(--checkbox-border-style)
+    var(--checkbox-border-color);
+  transition: all 0.3s;
+}
+
+.ui-checkbox::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: 0 0 0 calc(var(--checkbox-diameter) / 2.5) var(--primary-color);
+  border-radius: inherit;
+  opacity: 0;
+  transition: all 0.5s cubic-bezier(0.12, 0.4, 0.29, 1.46);
+}
+
+.ui-checkbox::before {
+  top: 40%;
+  left: 50%;
+  content: "";
+  position: absolute;
+  width: 4px;
+  height: 7px;
+  border-right: 2px solid var(--secondary-color);
+  border-bottom: 2px solid var(--secondary-color);
+  transform: translate(-50%, -50%) rotate(45deg) scale(0);
+  opacity: 0;
+  transition: all 0.1s cubic-bezier(0.71, -0.46, 0.88, 0.6), opacity 0.1s;
+}
+
+.ui-checkbox:hover {
+  border-color: var(--primary-color);
+}
+
+.ui-checkbox:checked {
+  background: var(--primary-color);
+  border-color: transparent;
+}
+
+.ui-checkbox:checked::before {
+  opacity: 1;
+  transform: translate(-50%, -50%) rotate(45deg) scale(var(--checkmark-size));
+  transition: all 0.2s cubic-bezier(0.12, 0.4, 0.29, 1.46) 0.1s;
+}
+
+.ui-checkbox:active:not(:checked)::after {
+  box-shadow: none;
+  transition: none;
+  opacity: 1;
+}
+
+.btn {
+  transition: color 0.5s;
+  z-index: 1;
+}
+
+.btn:before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  height: 150px;
+  width: 200px;
+  border-radius: 50%;
+}
+
+.btn:before {
+  top: 100%;
+  left: 100%;
+  transition: all 0.7s;
+}
+
+.btn:hover:before {
+  top: -30px;
+  left: -30px;
+}
+
+.btn:active:before {
+  transition: background 0s;
+}
+
+.button {
+  background-color: transparent;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: 0.5s;
+  z-index: 1;
+  color: var(--primary-color);
+}
+
+.button::before,
+.button::after {
+  content: "";
+  display: block;
+  width: 50px;
+  height: 50px;
+  transform: translate(-50%, -50%);
+  position: absolute;
+  border-radius: 50%;
+  z-index: -1;
+  background-color: var(--primary-color);
+  transition: 0.5s ease;
+}
+
+.button::before {
+  top: -1em;
+  left: -1em;
+}
+
+.button::after {
+  left: calc(100% + 1em);
+  top: calc(100% + 1em);
+}
+
+.button:hover::before,
+.button:hover::after {
+  height: 410px;
+  width: 410px;
+}
+
+.button:hover {
+  color: var(--secondary-color);
+}
+
+.button:active {
+  filter: brightness(0.8);
+}
+
+[prefers-color-scheme="dark"] {
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: dark) {
+  .button {
+    --primary-color: #202c37;
+    --secondary-color: #f6f8fa;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  .button {
+    --primary-color: #f6f8fa;
+    --secondary-color: #202c37;
+  }
+}
