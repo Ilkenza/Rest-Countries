@@ -3,13 +3,29 @@ import { useLocation, useNavigate } from "react-router-dom";
 import useLocalStorage from "./useLocalStorage";
 
 const useFilters = (initialFilters) => {
-    const [filterOption, setFilterOption] = useLocalStorage(
-        "filterOption",
-        initialFilters
-    );
+    const [filterOption, setFilterOption] = useLocalStorage("filterOption", initialFilters);
     const location = useLocation();
     const navigate = useNavigate();
 
+    // Function to update URL parameters based on filter options
+    const updateURLParameters = (filters) => {
+        const params = new URLSearchParams();
+        if (filters.unMember) {
+            params.set("unMember", filters.unMember);
+        }
+        if (filters.region.length) {
+            params.set("region", filters.region.join(","));
+        }
+        if (filters.subRegion.length) {
+            params.set("subRegion", filters.subRegion.join(","));
+        }
+        if (filters.timeZone.length) {
+            params.set("timeZone", filters.timeZone.join(","));
+        }
+        navigate(`?${params.toString()}`, { replace: true });
+    };
+
+    // Sync URL parameters to filter options
     useEffect(() => {
         const params = new URLSearchParams(location.search);
         const newFilterOption = {
@@ -29,34 +45,26 @@ const useFilters = (initialFilters) => {
             setFilterOption(newFilterOption);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [location.search, filterOption, setFilterOption]);
+    }, [location.search]);
+
+    // Sync filter options to URL parameters
+    useEffect(() => {
+        updateURLParameters(filterOption);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [filterOption]);
 
     const handleFilter = (option) => {
         setFilterOption(option);
-        const params = new URLSearchParams();
-        if (option.unMember) {
-            params.set("unMember", option.unMember);
-        }
-        if (option.region.length) {
-            params.set("region", option.region.join(","));
-        }
-        if (option.subRegion.length) {
-            params.set("subRegion", option.subRegion.join(","));
-        }
-        if (option.timeZone.length) {
-            params.set("timeZone", option.timeZone.join(","));
-        }
-        navigate(`?${params.toString()}`);
     };
 
     const handleResetFilters = () => {
-        setFilterOption({
+        const resetFilters = {
             unMember: "",
             region: [],
             subRegion: [],
             timeZone: [],
-        });
-        navigate(`/`);
+        };
+        setFilterOption(resetFilters);
     };
 
     return { filterOption, handleFilter, handleResetFilters };

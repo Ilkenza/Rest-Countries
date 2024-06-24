@@ -159,6 +159,30 @@ const FilterPopup = ({ onApplyFilters, onClose, initialFilters }) => {
     resetInvalidFilters();
   }, [filters.unMember]);
 
+  useEffect(() => {
+    if (filters.subRegion.length === 0) return;
+
+    const filterRegionsBySubRegion = async () => {
+      const response = await fetch("/data.json");
+      const countries = await response.json();
+
+      const validRegions = new Set();
+
+      countries.forEach((country) => {
+        if (filters.subRegion.includes(country.subregion)) {
+          if (country.region) validRegions.add(country.region);
+        }
+      });
+
+      setData((prevData) => ({
+        ...prevData,
+        regions: Array.from(validRegions).sort(),
+      }));
+    };
+
+    filterRegionsBySubRegion();
+  }, [filters.subRegion]);
+
   const handleCheckboxChange = (e) => {
     const { name, value } = e.target;
 
@@ -186,6 +210,7 @@ const FilterPopup = ({ onApplyFilters, onClose, initialFilters }) => {
         [name]: prevFilters[name].includes(value)
           ? prevFilters[name].filter((item) => item !== value)
           : [...prevFilters[name], value],
+        region: [],
       }));
     } else if (name === "timeZone") {
       setFilters((prevFilters) => ({
