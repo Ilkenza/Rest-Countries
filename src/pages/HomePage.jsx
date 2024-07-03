@@ -38,7 +38,7 @@ const HomePage = () => {
     setLoading(true);
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 100);
+    }, 150);
 
     return () => clearTimeout(timer);
   }, [searchQuery, sortOption, filterOption, currentPage]);
