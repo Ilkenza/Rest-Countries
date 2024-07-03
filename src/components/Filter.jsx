@@ -8,11 +8,6 @@ const Filter = ({ onFilter, filterOption }) => {
   const { t } = useTranslation();
   const [showPopup, setShowPopup] = useState(false);
 
-  const handleApplyFilters = (filters) => {
-    onFilter(filters);
-    setShowPopup(false);
-  };
-
   return (
     <>
       <button
@@ -24,7 +19,10 @@ const Filter = ({ onFilter, filterOption }) => {
       </button>
       {showPopup && (
         <FilterPopup
-          onApplyFilters={handleApplyFilters}
+          onApplyFilters={(e) => {
+            onFilter(e);
+            setShowPopup(false);
+          }}
           onClose={() => setShowPopup(false)}
           initialFilters={filterOption}
         />

@@ -27,6 +27,41 @@ const FilterCategories = ({ data, filters, handleCheckboxChange }) => {
 
   return (
     <>
+      <div className="mb-4">
+        <label className="block mb-2 dark:text-white text-text_light font-bold">
+          {t("unMember")}
+        </label>
+        <div className="grid grid-cols-1 min-[520px]:grid-cols-2 md:grid-cols-3 gap-1">
+          <div className="flex items-center space-x-2 w-56">
+            <label className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                name="unMember"
+                value="true"
+                onChange={handleCheckboxChange}
+                checked={filters.unMember === "true"}
+                className="ui-checkbox relative cursor-pointer appearance-none w-5 h-5 rounded-md"
+              />
+              <span className="dark:text-white text-text_light font-extralight opacity-80">
+                {t("yes")}
+              </span>
+            </label>
+            <label className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                name="unMember"
+                value="false"
+                onChange={handleCheckboxChange}
+                checked={filters.unMember === "false"}
+                className="ui-checkbox relative cursor-pointer appearance-none w-5 h-5 rounded-md"
+              />
+              <span className="dark:text-white text-text_light font-extralight opacity-80">
+                {t("no")}
+              </span>
+            </label>
+          </div>
+        </div>
+      </div>
       {categories.map((category) => (
         <div key={category.name} className="mb-4">
           <label className="block mb-2 dark:text-white text-text_light font-bold">

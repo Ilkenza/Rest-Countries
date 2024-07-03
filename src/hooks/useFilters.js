@@ -7,7 +7,6 @@ const useFilters = (initialFilters) => {
     const location = useLocation();
     const navigate = useNavigate();
 
-    // Function to update URL parameters based on filter options
     const updateURLParameters = (filters) => {
         const params = new URLSearchParams();
         if (filters.unMember) {
@@ -25,7 +24,6 @@ const useFilters = (initialFilters) => {
         navigate(`?${params.toString()}`, { replace: true });
     };
 
-    // Sync URL parameters to filter options
     useEffect(() => {
         const params = new URLSearchParams(location.search);
         const newFilterOption = {
@@ -35,7 +33,6 @@ const useFilters = (initialFilters) => {
             timeZone: params.get("timeZone") ? params.get("timeZone").split(",") : filterOption.timeZone || [],
         };
 
-        // Update filter options only if they are different
         if (
             newFilterOption.unMember !== filterOption.unMember ||
             JSON.stringify(newFilterOption.region) !== JSON.stringify(filterOption.region) ||
@@ -47,10 +44,8 @@ const useFilters = (initialFilters) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location.search]);
 
-    // Sync filter options to URL parameters
     useEffect(() => {
         updateURLParameters(filterOption);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filterOption]);
 
     const handleFilter = (option) => {
