@@ -2,9 +2,11 @@
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
+import { commonStyles } from "../styles/commonStyles";
 
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   const { t } = useTranslation();
+  const { textMode, bgMode, flexCenter } = commonStyles;
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -15,9 +17,9 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   if (!showPagination) return null;
 
   return (
-    <div className="flex items-center justify-center my-10 mb-12">
+    <div className={`${flexCenter} my-10 mb-12`}>
       <div
-        className="flex items-center justify-center text-xl bg-white dark:bg-el_dark p-2 dark:text-white text-text_light rounded-xl"
+        className={`${textMode} ${bgMode} ${flexCenter} text-xl p-2 rounded-xl`}
         data-aos="fade-up"
         data-aos-duration="500"
       >

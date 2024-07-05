@@ -1,8 +1,17 @@
 /* eslint-disable react/prop-types */
 import { useTranslation } from "react-i18next";
+import { commonStyles } from "../styles/commonStyles";
 
 const FilterCategories = ({ data, filters, handleCheckboxChange }) => {
   const { t } = useTranslation();
+  const {
+    textMode,
+    fontExtralight,
+    flexCenterItems,
+    spaceX,
+    blockBoldMb,
+    gridCols,
+  } = commonStyles;
 
   const categories = [
     {
@@ -28,48 +37,44 @@ const FilterCategories = ({ data, filters, handleCheckboxChange }) => {
   return (
     <>
       <div className="mb-4">
-        <label className="block mb-2 dark:text-white text-text_light font-bold">
-          {t("unMember")}
-        </label>
-        <div className="grid grid-cols-1 min-[520px]:grid-cols-2 md:grid-cols-3 gap-1">
-          <div className="flex items-center space-x-2 w-56">
-            <label className="flex items-center space-x-2">
+        <label className={`${textMode} ${blockBoldMb}`}>{t("unMember")}</label>
+        <div className={`${gridCols}`}>
+          <div className={`${flexCenterItems} ${spaceX} w-56`}>
+            <label className={`${flexCenterItems} ${spaceX}`}>
               <input
                 type="checkbox"
                 name="unMember"
                 value="true"
                 onChange={handleCheckboxChange}
                 checked={filters.unMember === "true"}
-                className="ui-checkbox relative cursor-pointer appearance-none w-5 h-5 rounded-md"
+                className="ui-checkbox"
               />
-              <span className="dark:text-white text-text_light font-extralight opacity-80">
+              <span className={`${textMode} ${fontExtralight}`}>
                 {t("yes")}
               </span>
             </label>
-            <label className="flex items-center space-x-2">
+            <label className={`${flexCenterItems} ${spaceX}`}>
               <input
                 type="checkbox"
                 name="unMember"
                 value="false"
                 onChange={handleCheckboxChange}
                 checked={filters.unMember === "false"}
-                className="ui-checkbox relative cursor-pointer appearance-none w-5 h-5 rounded-md"
+                className="ui-checkbox"
               />
-              <span className="dark:text-white text-text_light font-extralight opacity-80">
-                {t("no")}
-              </span>
+              <span className={`${textMode} ${fontExtralight}`}>{t("no")}</span>
             </label>
           </div>
         </div>
       </div>
       {categories.map((category) => (
         <div key={category.name} className="mb-4">
-          <label className="block mb-2 dark:text-white text-text_light font-bold">
+          <label className={`${textMode} ${blockBoldMb}`}>
             {category.label}
           </label>
-          <div className="grid grid-cols-1 pr-6 min-[520px]:grid-cols-2 md:grid-cols-3 gap-1">
+          <div className={`${gridCols} pr-6`}>
             {category.data.map((item) => (
-              <div key={item} className="flex items-center space-x-2 w-56">
+              <div key={item} className={`${flexCenterItems} ${spaceX} w-56`}>
                 <label className="flex">
                   <input
                     type="checkbox"
@@ -77,10 +82,10 @@ const FilterCategories = ({ data, filters, handleCheckboxChange }) => {
                     value={item}
                     onChange={handleCheckboxChange}
                     checked={filters[category.name].includes(item)}
-                    className="ui-checkbox relative cursor-pointer appearance-none w-5 h-5 rounded-md"
+                    className="ui-checkbox"
                   />
                 </label>
-                <span className="dark:text-white text-text_light font-extralight opacity-80">
+                <span className={`${textMode} ${fontExtralight}`}>
                   {category.translate ? t(`${category.name}.${item}`) : item}
                 </span>
               </div>

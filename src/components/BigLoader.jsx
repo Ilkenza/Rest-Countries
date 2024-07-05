@@ -1,14 +1,16 @@
+import { commonStyles } from "../styles/commonStyles";
+
 function BigLoader() {
-  const styledDot =
-    "absolute flex justify-center after:w-4 after:h-4 after:rounded-[50%] dark:after:bg-white after:bg-text_light";
+  const { flexCenter, styledDot, bigDot } = commonStyles;
+
   return (
-    <div className="flex justify-center items-center h-screen">
+    <div className={`${flexCenter} h-screen`}>
       <div className="relative h-[7rem] w-[7rem]">
-        <div className={`dot ${styledDot}`}></div>
-        <div className={`dot ${styledDot}`}></div>
-        <div className={`dot ${styledDot}`}></div>
-        <div className={`dot ${styledDot}`}></div>
-        <div className={`dot ${styledDot}`}></div>
+        <div className={`dot ${styledDot} ${bigDot}`}></div>
+        <div className={`dot ${styledDot} ${bigDot}`}></div>
+        <div className={`dot ${styledDot} ${bigDot}`}></div>
+        <div className={`dot ${styledDot} ${bigDot}`}></div>
+        <div className={`dot ${styledDot} ${bigDot}`}></div>
       </div>
     </div>
   );

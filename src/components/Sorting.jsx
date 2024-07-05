@@ -5,6 +5,7 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 import useClickOutside from "../hooks/useClickOutside";
 import useLocalStorage from "../hooks/useLocalStorage";
 import { useLocation, useNavigate } from "react-router-dom";
+import { commonStyles } from "../styles/commonStyles";
 
 const Sorting = ({ onSort }) => {
   const { t } = useTranslation();
@@ -13,6 +14,17 @@ const Sorting = ({ onSort }) => {
   const [sortOption, setSortOption] = useLocalStorage("sortOption", "name-asc");
   const location = useLocation();
   const navigate = useNavigate();
+  const {
+    textMode,
+    bgMode,
+    flexBetween,
+    flexCenterItems,
+    transOpacity,
+    transAll,
+    h12p2wFullRound,
+    absP2RoundShadow,
+    darkHoverBg,
+  } = commonStyles;
 
   useClickOutside(sortingRef, () => {
     setIsOpen(false);
@@ -45,23 +57,25 @@ const Sorting = ({ onSort }) => {
       <div className="relative">
         <div
           onClick={() => setIsOpen(!isOpen)}
-          className="w-full h-12 p-2 flex items-center justify-between rounded-md bg-white dark:bg-el_dark dark:text-white text-text_light cursor-pointer"
+          className={`${textMode} ${bgMode} ${flexBetween} ${h12p2wFullRound} cursor-pointer`}
         >
           {t("Sort_By")}
           <MdKeyboardArrowRight
-            className={`flex items-center pointer-events-none transition-transform duration-300 ${
+            className={`${flexCenterItems} ${transAll} pointer-events-none ${
               isOpen ? "rotate-90" : "rotate-0"
             }`}
           />
         </div>
 
         <div
-          className={`absolute z-10 w-full mt-2 p-2 rounded-md bg-white dark:bg-el_dark dark:text-white text-text_light shadow-lg overflow-hidden transition-all duration-300 ${
-            isOpen ? "max-h-90 opacity-100" : "max-h-0 opacity-0"
+          className={`${textMode} ${bgMode} ${absP2RoundShadow} ${transAll} z-10 w-full mt-2 ${
+            isOpen
+              ? "max-h-90 opacity-100"
+              : "max-h-0 opacity-0 overflow-hidden"
           }`}
         >
           <ul
-            className={`transition-opacity duration-300 ${
+            className={`${transOpacity} ${
               isOpen ? "opacity-100" : "opacity-0"
             }`}
           >
@@ -69,7 +83,7 @@ const Sorting = ({ onSort }) => {
               <li
                 key={option.value}
                 value={sortOption}
-                className="h-18 my-2 flex items-center justify-between px-4 hover:bg-gray-200 dark:hover:bg-bg_dark cursor-pointer"
+                className={`${flexBetween} ${darkHoverBg} h-18 my-2 px-4 hover:bg-gray-200 cursor-pointer`}
                 onClick={() => handleSortChange(option.value)}
               >
                 <span className="py-1">{option.label}</span>

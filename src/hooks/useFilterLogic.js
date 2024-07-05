@@ -58,7 +58,16 @@ const useFilterLogic = (initialFilters) => {
   }, []);
 
   useEffect(() => {
-    if (filters.unMember === "") return;
+    if (filters.unMember === "") {
+      // Reset to all data when unMember filter is empty
+      setData((prevData) => ({
+        ...prevData,
+        regions: [...prevData.allRegions],
+        subRegions: [...prevData.allSubRegions],
+        timeZones: [...prevData.allTimeZones],
+      }));
+      return;
+    }
 
     const resetInvalidFilters = async () => {
       const response = await fetch("/data.json");
@@ -107,25 +116,11 @@ const useFilterLogic = (initialFilters) => {
       setFilters((prevFilters) => ({
         ...prevFilters,
         [name]: prevFilters[name] === value ? "" : value,
-        region: [], // Reset region when unMember changes
-        subRegion: [], // Reset subRegion when unMember changes
-        timeZone: [], // Reset timeZone when unMember changes
+        region: [],
+        subRegion: [],
+        timeZone: [],
       }));
-    } else if (name === "region") {
-      setFilters((prevFilters) => ({
-        ...prevFilters,
-        [name]: prevFilters[name].includes(value)
-          ? prevFilters[name].filter((item) => item !== value)
-          : [...prevFilters[name], value],
-      }));
-    } else if (name === "subRegion") {
-      setFilters((prevFilters) => ({
-        ...prevFilters,
-        [name]: prevFilters[name].includes(value)
-          ? prevFilters[name].filter((item) => item !== value)
-          : [...prevFilters[name], value],
-      }));
-    } else if (name === "timeZone") {
+    } else {
       setFilters((prevFilters) => ({
         ...prevFilters,
         [name]: prevFilters[name].includes(value)

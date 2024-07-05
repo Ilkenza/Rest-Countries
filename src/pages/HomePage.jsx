@@ -10,6 +10,7 @@ import { useTranslation } from "react-i18next";
 import useFilters from "../hooks/useFilters";
 import usePagination from "../hooks/usePagination";
 import useLocalStorage from "../hooks/useLocalStorage";
+import { commonStyles } from "../styles/commonStyles";
 
 const HomePage = () => {
   const { t } = useTranslation();
@@ -20,6 +21,14 @@ const HomePage = () => {
   const countriesPerPage = 24;
   const location = useLocation();
   const navigate = useNavigate();
+  const {
+    textMode,
+    flexBetween,
+    underlinePy,
+    maxWidth1300,
+    flexCenterBetweenCol,
+    flexItemsCenterCol,
+  } = commonStyles;
 
   const { filterOption, handleFilter, handleResetFilters } = useFilters({
     unMember: "",
@@ -56,11 +65,13 @@ const HomePage = () => {
   };
 
   return (
-    <div className="flex flex-col items-center pt-[7rem]">
-      <div className="max-w-[1300px] w-full px-5 flex items-center justify-between">
-        <div className="flex flex-col md:flex-row items-center justify-between w-full">
+    <div className={`${flexItemsCenterCol} pt-[7rem]`}>
+      <div className={`${flexBetween} ${maxWidth1300} px-5`}>
+        <div className={`${flexCenterBetweenCol} md:flex-row w-full`}>
           <SearchBar onSearch={handleSearch} />
-          <div className="flex flex-col min-[480px]:flex-row items-center w-full md:w-[23.25rem] justify-between">
+          <div
+            className={`${flexCenterBetweenCol} min-[480px]:flex-row w-full md:w-[23.25rem]`}
+          >
             <Filter onFilter={handleFilter} filterOption={filterOption} />
             <Sorting onSort={handleSort} />
           </div>
@@ -91,7 +102,7 @@ const HomePage = () => {
       <a
         href="https://linktr.ee/ilkenza"
         target="_blank"
-        className="dark:text-white text-text_light py-1 underline hover:opacity-70"
+        className={`${textMode} ${underlinePy} hover:opacity-70`}
       >
         {t("Madeby")} Korodić Ilija
       </a>

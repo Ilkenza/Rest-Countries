@@ -6,6 +6,7 @@ import Empty from "./Empty";
 import { useTranslation } from "react-i18next";
 import Aos from "aos";
 import "aos/dist/aos.css";
+import { commonStyles } from "../styles/commonStyles";
 
 const CountryList = ({
   searchQuery,
@@ -20,6 +21,13 @@ const CountryList = ({
   const [countries, setCountries] = useState([]);
   const [loading, setLoading] = useState(true);
   const { t } = useTranslation();
+  const {
+    textMode,
+    flexBetween,
+    flexJCenter,
+    flexCenterStartCol,
+    maxWidth1300,
+  } = commonStyles;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -119,15 +127,15 @@ const CountryList = ({
   }, [filteredCountries, setTotalCountries]);
 
   return (
-    <div className="flex flex-col items-start justify-center">
+    <div className={`${flexCenterStartCol}`}>
       {loading ? (
         <Loader />
       ) : filteredCountries.length === 0 ? (
         <Empty />
       ) : (
         <>
-          <div className="justify-between px-5 flex items-center py-2 flex-wrap max-w-[1300px] w-full">
-            <p className="dark:text-white text-text_light">
+          <div className={`${flexBetween} ${maxWidth1300} px-5 py-2`}>
+            <p className={`${textMode}`}>
               {totalCountries} {t("countries")}
             </p>
             {filterOption.unMember ||
@@ -135,18 +143,18 @@ const CountryList = ({
             filterOption.subRegion.length ||
             filterOption.timeZone.length ? (
               <button
-                className="underline cursor-pointer text-text_light dark:text-white"
+                className={`${textMode} underline cursor-pointer `}
                 onClick={resetFilters}
               >
                 Ukloni sve filtere
               </button>
             ) : null}
           </div>
-          <ul className="max-w-[1300px] justify-center flex flex-wrap">
+          <ul className={`${flexJCenter} ${maxWidth1300}`}>
             {displayedCountries.map((country, index) => (
               <li
                 key={index}
-                className="w-[15.234rem] my-5 min-[350px]:m-10 flex justify-center"
+                className={`${flexJCenter} w-[15.234rem] my-5 min-[350px]:m-10 `}
                 data-aos="fade-up"
                 data-aos-delay={(index % 6) * 100}
               >

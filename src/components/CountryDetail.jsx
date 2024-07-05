@@ -3,14 +3,46 @@ import { useTranslation } from "react-i18next";
 import { BsArrowLeft } from "react-icons/bs";
 import { useNavigate, useLocation } from "react-router-dom";
 import Empty from "./Empty";
+import { commonStyles } from "../styles/commonStyles";
 
 const CountryDetail = ({ country, allCountries }) => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
-  const translatedCountryName = t(`country.${country.name}`);
+
+  const {
+    textMode,
+    bgMode,
+    flexCenter,
+    fontExtralight,
+    flexCol,
+    flexJCenter,
+    flexCenterStartCol,
+    flexItemsCenterCol,
+    boldPb,
+    fullWH,
+    spaceX,
+    underlinePy,
+  } = commonStyles;
 
   if (!country) return <Empty />;
+
+  const details = [
+    { label: "native_name", value: country.nativeName },
+    { label: "populationn", value: country.population.toLocaleString() },
+    { label: "regionn", value: t(`region.${country.region}`) },
+    { label: "subregionn", value: t(`subRegion.${country.subregion}`) },
+    { label: "capitall", value: country.capital },
+    { label: "top_level_domain", value: country.topLevelDomain },
+    {
+      label: "currencies",
+      value: country.currencies?.map((currency) => currency.name).join(", "),
+    },
+    {
+      label: "languages",
+      value: country.languages?.map((language) => language.name).join(", "),
+    },
+  ];
 
   const getBorderCountryName = (borderCode) => {
     const borderCountry = allCountries.find((c) => c.alpha3Code === borderCode);
@@ -47,12 +79,16 @@ const CountryDetail = ({ country, allCountries }) => {
   };
 
   return (
-    <div className="text-text_light dark:text-white flex justify-center items-center w-full h-full p-4 min-[950px]:p-8">
-      <div className="flex flex-col min-[950px]:flex-row w-full h-full items-center justify-end min-[950px]:justify-evenly mt-28">
-        <div className="flex justify-center items-start flex-col h-full w-full min-[950px]:w-[40rem]">
+    <div className={`${textMode} ${flexCenter} ${fullWH} p-4 min-[950px]:p-8`}>
+      <div
+        className={`${flexItemsCenterCol} ${fullWH} min-[950px]:flex-row  justify-end min-[950px]:justify-evenly mt-28`}
+      >
+        <div
+          className={`${flexCenterStartCol} ${fullWH} min-[950px]:w-[40rem]`}
+        >
           <button
             onClick={handleBackClick}
-            className="dark:text-white text-text_light bg-white dark:bg-el_dark font-semibold py-2 px-6 inline-flex rounded-lg items-center"
+            className={`${textMode} ${bgMode} font-semibold py-2 px-6 inline-flex rounded-lg items-center`}
           >
             <BsArrowLeft className="mr-2" />
             {t("back")}
@@ -65,76 +101,40 @@ const CountryDetail = ({ country, allCountries }) => {
             />
           </div>
         </div>
-        <div className="flex flex-col justify-center space-y-6 px-0 min-[560px]:px-8 max-w-[40rem] w-full min-[950px]:w-[40rem]">
-          <h1 className="font-bold pb-3 text-3xl">{translatedCountryName}</h1>
-          <div className="flex flex-col min-[560px]:flex-row justify-between min-[560px]:space-x-4">
+        <div
+          className={`${flexJCenter} ${flexCol} space-y-6 px-0 min-[560px]:px-8 max-w-[40rem] w-full min-[950px]:w-[40rem]`}
+        >
+          <h1 className={`${boldPb} text-3xl`}>
+            {t(`country.${country.name}`)}
+          </h1>
+          <div
+            className={`${flexCol} min-[560px]:flex-row justify-between min-[560px]:space-x-4`}
+          >
             <div className="space-y-2">
-              <p>
-                {t("native_name")}:{" "}
-                <span className="font-extralight opacity-80">
-                  {country.nativeName}
-                </span>
-              </p>
-              <p>
-                {t("populationn")}:{" "}
-                <span className="font-extralight opacity-80">
-                  {country.population.toLocaleString()}
-                </span>
-              </p>
-              <p>
-                {t("regionn")}:{" "}
-                <span className="font-extralight opacity-80">
-                  {t(`region.${country.region}`)}
-                </span>
-              </p>
-              <p>
-                {t("subregionn")}:{" "}
-                <span className="font-extralight opacity-80">
-                  {t(`subRegion.${country.subregion}`)}
-                </span>
-              </p>
-              <p>
-                {t("capitall")}:{" "}
-                <span className="font-extralight opacity-80">
-                  {country.capital}
-                </span>
-              </p>
+              {details.slice(0, 5).map(({ label, value }) => (
+                <p key={label}>
+                  {t(label)}:{" "}
+                  <span className={`${fontExtralight}`}>{value}</span>
+                </p>
+              ))}
             </div>
             <div className="mt-8 mb-3 min-[560px]:my-0 space-y-2">
-              <p>
-                {t("top_level_domain")}:{" "}
-                <span className="font-extralight opacity-80">
-                  {country.topLevelDomain}
-                </span>
-              </p>
-              <p>
-                {t("currencies")}:{" "}
-                {country.currencies && country.currencies.length > 0 && (
-                  <span className="font-extralight opacity-80">
-                    {country.currencies.map((currency) => (
-                      <span key={currency.code}>{currency.name}</span>
-                    ))}
-                  </span>
-                )}
-              </p>
-              <p>
-                {t("languages")}:{" "}
-                {country.languages && country.languages.length > 0 && (
-                  <span className="font-extralight opacity-80">
-                    {country.languages.map((language) => (
-                      <span key={language.iso639_1}> {language.name}</span>
-                    ))}
-                  </span>
-                )}
-              </p>
+              {details.slice(5).map(({ label, value }) => (
+                <p key={label}>
+                  {t(label)}:{" "}
+                  <span className={`${fontExtralight}`}>{value}</span>
+                </p>
+              ))}
             </div>
           </div>
           {country.borders && country.borders.length > 0 && (
-            <div className="flex flex-col min-[950px]:flex-row items-start min-[950px]:items-center">
+            <div
+              className={`${flexCol} min-[950px]:flex-row items-start min-[950px]:items-center`}
+            >
               <p className="mr-3 mb-3 min-[950px]:mb-0">
                 {t("border_countries")}:
               </p>
-              <div className="space-x-2">
+              <div className={`${spaceX}`}>
                 {country.borders
                   .map(getBorderCountryName)
                   .filter(Boolean)
@@ -142,7 +142,7 @@ const CountryDetail = ({ country, allCountries }) => {
                     <button
                       key={borderName}
                       onClick={() => handleBorderClick(borderName)}
-                      className="dark:text-white text-text_light bg-white font-extralight opacity-80 dark:bg-el_dark py-1 px-3 rounded-sm mb-2"
+                      className={`${textMode} ${fontExtralight} ${bgMode} py-1 px-3 rounded-sm mb-2`}
                     >
                       {borderName}
                     </button>
@@ -153,7 +153,7 @@ const CountryDetail = ({ country, allCountries }) => {
           <div>
             <button
               onClick={() => handleGoogleMapClick(country.name)}
-              className="dark:text-white text-text_light py-1 underline"
+              className={`${textMode} ${underlinePy}`}
             >
               {t("Cogm")}
             </button>
