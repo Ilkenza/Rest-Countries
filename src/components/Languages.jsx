@@ -44,7 +44,7 @@ function Languages() {
         </div>
       </button>
       <div
-        className={`${bgMode} ${flexCol} ${transAll} ${absP2RoundShadow} top-10 right-0 ${
+        className={`${bgMode} ${flexCol} ${transAll} ${absP2RoundShadow} top-10 py-1 px-3 right-0 ${
           showLanguageDropdown
             ? "opacity-100 max-h-60"
             : "opacity-0 max-h-0 overflow-hidden"

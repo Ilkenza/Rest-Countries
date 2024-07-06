@@ -59,7 +59,7 @@ const Sorting = ({ onSort }) => {
           }`}
         >
           <ul
-            className={`${transOpacity} ${
+            className={`${transOpacity} p-1 ${
               isOpen ? "opacity-100" : "opacity-0"
             }`}
           >
