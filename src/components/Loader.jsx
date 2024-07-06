@@ -6,11 +6,9 @@ function Loader() {
   return (
     <div className={`${flexCenter} h-60`}>
       <div className="relative h-[3.75rem] w-[3.75rem]">
-        <div className={`dot ${styledDot} ${smallDot}`}></div>
-        <div className={`dot ${styledDot} ${smallDot}`}></div>
-        <div className={`dot ${styledDot} ${smallDot}`}></div>
-        <div className={`dot ${styledDot} ${smallDot}`}></div>
-        <div className={`dot ${styledDot} ${smallDot}`}></div>
+        {Array.from({ length: 5 }, (_, index) => (
+          <div key={index} className={`dot ${styledDot} ${smallDot}`}></div>
+        ))}
       </div>
     </div>
   );

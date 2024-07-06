@@ -15,11 +15,11 @@ function DarkMode() {
   }, [darkMode]);
   const { flexCenterItems, transOpacity } = commonStyles;
 
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-  };
   return (
-    <button onClick={toggleDarkMode} className={`${flexCenterItems}`}>
+    <button
+      onClick={() => setDarkMode(!darkMode)}
+      className={`${flexCenterItems}`}
+    >
       <div className="p-2 pr-0 text-lg">
         {darkMode ? (
           <IoSunnyOutline className="" />

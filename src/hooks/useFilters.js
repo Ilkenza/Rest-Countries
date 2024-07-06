@@ -46,6 +46,7 @@ const useFilters = (initialFilters) => {
 
     useEffect(() => {
         updateURLParameters(filterOption);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filterOption]);
 
     const handleFilter = (option) => {

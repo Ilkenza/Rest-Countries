@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import Aos from "aos";
 import "aos/dist/aos.css";
 import { commonStyles } from "../styles/commonStyles";
+import DataComponent from "./DataComponent";
 
 const CountryList = ({
   searchQuery,
@@ -21,6 +22,7 @@ const CountryList = ({
   const [countries, setCountries] = useState([]);
   const [loading, setLoading] = useState(true);
   const { t } = useTranslation();
+  const { sortCountries } = DataComponent();
   const {
     textMode,
     flexBetween,
@@ -92,30 +94,6 @@ const CountryList = ({
     filterOption
   );
 
-  const sortCountries = (countries, sortOption) => {
-    const translatedCountries = countries.map((country) => ({
-      ...country,
-      translatedName: t(`country.${country.name}`),
-    }));
-
-    switch (sortOption) {
-      case "name-asc":
-        return translatedCountries.sort((a, b) =>
-          a.translatedName.localeCompare(b.translatedName, "pt")
-        );
-      case "name-desc":
-        return translatedCountries.sort((a, b) =>
-          b.translatedName.localeCompare(a.translatedName, "pt")
-        );
-      case "population-asc":
-        return countries.sort((a, b) => a.population - b.population);
-      case "population-desc":
-        return countries.sort((a, b) => b.population - a.population);
-      default:
-        return countries;
-    }
-  };
-
   const sortedCountries = sortCountries(filteredCountries, sortOption);
 
   const startIndex = (currentPage - 1) * countriesPerPage;
@@ -123,8 +101,10 @@ const CountryList = ({
   const displayedCountries = sortedCountries.slice(startIndex, endIndex);
 
   useEffect(() => {
-    setTotalCountries(filteredCountries.length);
-  }, [filteredCountries, setTotalCountries]);
+    if (totalCountries !== filteredCountries.length) {
+      setTotalCountries(filteredCountries.length);
+    }
+  }, [filteredCountries.length, totalCountries, setTotalCountries]);
 
   return (
     <div className={`${flexCenterStartCol}`}>

@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
+import { MdKeyboardArrowRight } from "react-icons/md";
 import { commonStyles } from "../styles/commonStyles";
 
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
@@ -12,9 +12,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
     window.scrollTo(0, 0);
   }, [currentPage]);
 
-  const showPagination = totalPages > 1;
-
-  if (!showPagination) return null;
+  if (!totalPages > 1) return null;
 
   return (
     <div className={`${flexCenter} my-10 mb-12`}>
@@ -30,7 +28,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
           disabled={currentPage === 1}
           className="text-2xl"
         >
-          <MdKeyboardArrowLeft />
+          <MdKeyboardArrowRight className="rotate-180" />
         </button>
         <span className="mx-2">
           {t("page")} {currentPage} {t("of")} {totalPages}

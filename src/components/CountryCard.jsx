@@ -2,17 +2,13 @@
 import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router-dom";
 import { commonStyles } from "../styles/commonStyles";
+import DataComponent from "./DataComponent";
 
 const CountryCard = ({ country }) => {
   const { t, i18n } = useTranslation();
   const translatedCountryName = t(`country.${country.name}`);
+  const { countryDetails } = DataComponent(country);
   const { textMode, fontExtralight, bgMode, boldPb } = commonStyles;
-
-  const countryDetails = [
-    { label: t("populationn"), value: country.population.toLocaleString() },
-    { label: t("regionn"), value: country.region },
-    { label: t("capitall"), value: country.capital },
-  ];
 
   return (
     <NavLink to={`/${i18n.language}/country/${country.alpha3Code}`}>

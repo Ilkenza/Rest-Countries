@@ -59,7 +59,6 @@ const useFilterLogic = (initialFilters) => {
 
   useEffect(() => {
     if (filters.unMember === "") {
-      // Reset to all data when unMember filter is empty
       setData((prevData) => ({
         ...prevData,
         regions: [...prevData.allRegions],
@@ -109,6 +108,20 @@ const useFilterLogic = (initialFilters) => {
     resetInvalidFilters();
   }, [filters.unMember]);
 
+  const getFilteredData = () => {
+    const filteredRegions = filters.timeZone.length > 0 || filters.subRegion.length > 0 || filters.unMember !== ""
+      ? data.regions
+      : data.allRegions;
+    const filteredSubRegions = filters.region.length > 0 || filters.timeZone.length > 0 || filters.unMember !== ""
+      ? data.subRegions
+      : data.allSubRegions;
+    const filteredTimeZones = filters.region.length > 0 || filters.subRegion.length > 0 || filters.unMember !== ""
+      ? data.timeZones
+      : data.allTimeZones;
+
+    return { regions: filteredRegions, subRegions: filteredSubRegions, timeZones: filteredTimeZones };
+  };
+
   const handleCheckboxChange = (e) => {
     const { name, value } = e.target;
 
@@ -130,7 +143,7 @@ const useFilterLogic = (initialFilters) => {
     }
   };
 
-  return { filters, data, loading, handleCheckboxChange };
+  return { filters, data, loading, handleCheckboxChange, getFilteredData };
 };
 
 export default useFilterLogic;

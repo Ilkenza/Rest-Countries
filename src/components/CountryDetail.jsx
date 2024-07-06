@@ -1,14 +1,14 @@
 /* eslint-disable react/prop-types */
 import { useTranslation } from "react-i18next";
 import { BsArrowLeft } from "react-icons/bs";
-import { useNavigate, useLocation } from "react-router-dom";
 import Empty from "./Empty";
 import { commonStyles } from "../styles/commonStyles";
+import DataComponent from "./DataComponent";
+import { useCountryUtils } from "../utils/countryUtils";
 
 const CountryDetail = ({ country, allCountries }) => {
-  const { t, i18n } = useTranslation();
-  const navigate = useNavigate();
-  const location = useLocation();
+  const { t } = useTranslation();
+  const { details } = DataComponent(country);
 
   const {
     textMode,
@@ -25,58 +25,14 @@ const CountryDetail = ({ country, allCountries }) => {
     underlinePy,
   } = commonStyles;
 
+  const {
+    getBorderCountryName,
+    handleBorderClick,
+    handleGoogleMapClick,
+    handleBackClick,
+  } = useCountryUtils(allCountries);
+
   if (!country) return <Empty />;
-
-  const details = [
-    { label: "native_name", value: country.nativeName },
-    { label: "populationn", value: country.population.toLocaleString() },
-    { label: "regionn", value: t(`region.${country.region}`) },
-    { label: "subregionn", value: t(`subRegion.${country.subregion}`) },
-    { label: "capitall", value: country.capital },
-    { label: "top_level_domain", value: country.topLevelDomain },
-    {
-      label: "currencies",
-      value: country.currencies?.map((currency) => currency.name).join(", "),
-    },
-    {
-      label: "languages",
-      value: country.languages?.map((language) => language.name).join(", "),
-    },
-  ];
-
-  const getBorderCountryName = (borderCode) => {
-    const borderCountry = allCountries.find((c) => c.alpha3Code === borderCode);
-    return borderCountry ? t(`country.${borderCountry.name}`) : null;
-  };
-
-  const getBorderCountryCode = (borderName) => {
-    const borderCountry = allCountries.find(
-      (c) => t(`country.${c.name}`) === borderName
-    );
-    return borderCountry ? borderCountry.alpha3Code : null;
-  };
-
-  const handleBorderClick = (borderName) => {
-    const borderCode = getBorderCountryCode(borderName);
-    if (borderCode) {
-      navigate(
-        `/${i18n.language}/country/${borderCode.toLowerCase()}${
-          location.search
-        }`
-      );
-    }
-  };
-
-  const handleGoogleMapClick = (countryName) => {
-    const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-      countryName
-    )}`;
-    window.open(googleMapsUrl, "_blank");
-  };
-
-  const handleBackClick = () => {
-    navigate(`/${i18n.language}${location.search}`);
-  };
 
   return (
     <div className={`${textMode} ${flexCenter} ${fullWH} p-4 min-[950px]:p-8`}>

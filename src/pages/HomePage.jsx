@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 import CountryList from "../components/CountryList";
 import SearchBar from "../components/SearchBar";
 import Filter from "../components/Filter";
@@ -9,18 +8,17 @@ import Sorting from "../components/Sorting";
 import { useTranslation } from "react-i18next";
 import useFilters from "../hooks/useFilters";
 import usePagination from "../hooks/usePagination";
-import useLocalStorage from "../hooks/useLocalStorage";
 import { commonStyles } from "../styles/commonStyles";
+import useSort from "../hooks/useSort";
 
 const HomePage = () => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
-  const [sortOption, setSortOption] = useLocalStorage("sortOption", "name-asc");
+  const { sortOption, handleSort } = useSort("");
   const [loading, setLoading] = useState(false);
   const [totalCountries, setTotalCountries] = useState(250);
   const countriesPerPage = 24;
-  const location = useLocation();
-  const navigate = useNavigate();
+
   const {
     textMode,
     flexBetween,
@@ -54,14 +52,6 @@ const HomePage = () => {
 
   const handleSearch = (query) => {
     setSearchQuery(query);
-  };
-
-  const handleSort = (option) => {
-    setSortOption(option);
-    const queryParams = new URLSearchParams(location.search);
-    queryParams.set("sort", option);
-    queryParams.set("page", 1);
-    navigate({ search: queryParams.toString() });
   };
 
   return (

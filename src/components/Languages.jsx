@@ -1,17 +1,17 @@
 import { useRef, useState } from "react";
 import useClickOutside from "../hooks/useClickOutside";
 import { useTranslation } from "react-i18next";
-import { useLocation, useNavigate } from "react-router-dom";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { IoGlobeOutline } from "react-icons/io5";
 import { commonStyles } from "../styles/commonStyles";
+import DataComponent from "./DataComponent";
+import useChangeLanguage from "../hooks/useChangeLanguage";
 
 function Languages() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
   const sortingRef = useRef(null);
-  const location = useLocation();
-  const navigate = useNavigate();
+  const { languages } = DataComponent();
   const {
     bgMode,
     flexCenterItems,
@@ -25,39 +25,7 @@ function Languages() {
   useClickOutside(sortingRef, () => {
     setShowLanguageDropdown(false);
   });
-
-  const changeLanguage = (lng) => {
-    const currentPath = location.pathname;
-    const currentParams = new URLSearchParams(location.search);
-    let newPath;
-
-    if (currentPath.includes("/country/")) {
-      const parts = currentPath.split("/");
-      const countryCode = parts[parts.length - 1];
-      newPath = `/${lng}/country/${countryCode}`;
-    } else {
-      newPath = `/${lng}${currentPath.replace(`/${i18n.language}`, "")}`;
-    }
-
-    const queryParams = new URLSearchParams(currentParams);
-
-    navigate({
-      pathname: newPath,
-      search: queryParams.toString(),
-    });
-    i18n.changeLanguage(lng);
-    setShowLanguageDropdown(false);
-  };
-
-  const languages = [
-    { code: "en", label: "english" },
-    { code: "sr", label: "serbian" },
-    { code: "es", label: "spanish" },
-    { code: "pt", label: "portuguese" },
-    { code: "fr", label: "french" },
-    { code: "it", label: "italian" },
-    { code: "ru", label: "russian" },
-  ];
+  const changeLanguage = useChangeLanguage(setShowLanguageDropdown);
 
   return (
     <div className="relative">

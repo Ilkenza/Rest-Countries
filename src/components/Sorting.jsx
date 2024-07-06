@@ -1,19 +1,19 @@
 /* eslint-disable react/prop-types */
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import useClickOutside from "../hooks/useClickOutside";
-import useLocalStorage from "../hooks/useLocalStorage";
-import { useLocation, useNavigate } from "react-router-dom";
 import { commonStyles } from "../styles/commonStyles";
+import DataComponent from "./DataComponent";
+import useSort from "../hooks/useSort";
 
 const Sorting = ({ onSort }) => {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const sortingRef = useRef(null);
-  const [sortOption, setSortOption] = useLocalStorage("sortOption", "name-asc");
-  const location = useLocation();
-  const navigate = useNavigate();
+  const { sortOption, handleSort } = useSort("");
+
+  const { sortOptions } = DataComponent();
   const {
     textMode,
     bgMode,
@@ -30,27 +30,11 @@ const Sorting = ({ onSort }) => {
     setIsOpen(false);
   });
 
-  useEffect(() => {
-    const queryParams = new URLSearchParams(location.search);
-    if (sortOption && queryParams.get("sort") !== sortOption) {
-      queryParams.set("sort", sortOption);
-      navigate({ search: queryParams.toString() }, { replace: true });
-      onSort(sortOption);
-    }
-  }, [sortOption, location, navigate, onSort]);
-
   const handleSortChange = (sortValue) => {
-    setSortOption(sortValue);
+    handleSort(sortValue);
     onSort(sortValue);
     setIsOpen(false);
   };
-
-  const sortOptions = [
-    { value: "name-asc", label: t("sortByNameAsc") },
-    { value: "name-desc", label: t("sortByNameDesc") },
-    { value: "population-asc", label: t("sortByPopulationAsc") },
-    { value: "population-desc", label: t("sortByPopulationDesc") },
-  ];
 
   return (
     <div className="relative w-full my-4 md:w-72" ref={sortingRef}>

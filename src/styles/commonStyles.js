@@ -1,3 +1,4 @@
+
 export const commonStyles = {
     textMode: "dark:text-white text-text_light",
     bgMode: "bg-white dark:bg-el_dark",

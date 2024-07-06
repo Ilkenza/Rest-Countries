@@ -6,11 +6,9 @@ function BigLoader() {
   return (
     <div className={`${flexCenter} h-screen`}>
       <div className="relative h-[7rem] w-[7rem]">
-        <div className={`dot ${styledDot} ${bigDot}`}></div>
-        <div className={`dot ${styledDot} ${bigDot}`}></div>
-        <div className={`dot ${styledDot} ${bigDot}`}></div>
-        <div className={`dot ${styledDot} ${bigDot}`}></div>
-        <div className={`dot ${styledDot} ${bigDot}`}></div>
+        {Array.from({ length: 5 }, (_, index) => (
+          <div key={index} className={`dot ${styledDot} ${bigDot}`}></div>
+        ))}
       </div>
     </div>
   );

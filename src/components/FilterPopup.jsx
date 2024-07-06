@@ -10,7 +10,7 @@ import { commonStyles } from "../styles/commonStyles";
 
 const FilterPopup = ({ onApplyFilters, onClose, initialFilters }) => {
   const { t } = useTranslation();
-  const { filters, data, loading, handleCheckboxChange } =
+  const { filters, loading, handleCheckboxChange, getFilteredData } =
     useFilterLogic(initialFilters);
   const {
     textMode,
@@ -31,6 +31,7 @@ const FilterPopup = ({ onApplyFilters, onClose, initialFilters }) => {
     onApplyFilters(filters);
     onClose();
   };
+  const { regions, subRegions, timeZones } = getFilteredData();
 
   return (
     <div
@@ -57,26 +58,7 @@ const FilterPopup = ({ onApplyFilters, onClose, initialFilters }) => {
 
           <div className="pl-6">
             <FilterCategories
-              data={{
-                regions:
-                  filters.timeZone.length > 0 ||
-                  filters.subRegion.length > 0 ||
-                  filters.unMember !== ""
-                    ? data.regions
-                    : data.allRegions,
-                subRegions:
-                  filters.region.length > 0 ||
-                  filters.timeZone.length > 0 ||
-                  filters.unMember !== ""
-                    ? data.subRegions
-                    : data.allSubRegions,
-                timeZones:
-                  filters.region.length > 0 ||
-                  filters.subRegion.length > 0 ||
-                  filters.unMember !== ""
-                    ? data.timeZones
-                    : data.allTimeZones,
-              }}
+              data={{ regions, subRegions, timeZones }}
               filters={filters}
               handleCheckboxChange={handleCheckboxChange}
             />
