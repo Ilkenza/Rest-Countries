@@ -26,7 +26,8 @@ export const commonStyles = {
     maxWidth1300: "max-w-[1300px] w-full flex-wrap",
     boldTextLG: "font-bold text-lg",
     h12p2wFullRound: "h-12 p-2 w-full rounded-md",
-    gridCols: "grid grid-cols-1 min-[520px]:grid-cols-2 md:grid-cols-3 gap-1",
+    gridColsDefault: "grid grid-cols-1 min-[520px]:grid-cols-2 md:grid-cols-3 gap-1",
+    gridColsTwo: "grid grid-cols-1 min-[520px]:grid-cols-2 gap-1",
     borderRounded: "border border-bg_dark dark:border-bg_light rounded-md",
     absP2RoundShadow: "absolute px-2 rounded-md shadow-md"
 }

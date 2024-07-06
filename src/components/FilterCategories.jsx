@@ -11,10 +11,12 @@ const FilterCategories = ({ data, filters, handleCheckboxChange }) => {
     flexCenterItems,
     spaceX,
     blockBoldMb,
-    gridCols,
+    gridColsDefault,
+    gridColsTwo,
   } = commonStyles;
 
   const { categories } = DataComponent(null, data);
+
   return (
     <>
       {categories.map((category) => (
@@ -22,7 +24,11 @@ const FilterCategories = ({ data, filters, handleCheckboxChange }) => {
           <label className={`${textMode} ${blockBoldMb}`}>
             {category.label}
           </label>
-          <div className={`${gridCols} pr-6`}>
+          <div
+            className={`${
+              category.name === "unMember" ? gridColsTwo : gridColsDefault
+            }pr-6`}
+          >
             {category.data.map((item) => (
               <div
                 key={item.value}
