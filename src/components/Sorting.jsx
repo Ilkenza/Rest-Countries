@@ -67,7 +67,7 @@ const Sorting = ({ onSort }) => {
               <li
                 key={option.value}
                 value={sortOption}
-                className={`${flexBetween} ${darkHoverBg} h-18 my-2 px-4 hover:bg-gray-200 cursor-pointer`}
+                className={`${flexBetween} ${darkHoverBg} h-18 my-2 py-1 px-3 hover:bg-gray-200 cursor-pointer`}
                 onClick={() => handleSortChange(option.value)}
               >
                 <span className="py-1">{option.label}</span>
