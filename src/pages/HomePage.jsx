@@ -1,9 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import CountryList from "../components/CountryList";
 import SearchBar from "../components/SearchBar";
 import Filter from "../components/Filter";
 import Pagination from "../components/Pagination";
-import Loader from "../components/Loader";
 import Sorting from "../components/Sorting";
 import { useTranslation } from "react-i18next";
 import useFilters from "../hooks/useFilters";
@@ -15,7 +14,6 @@ const HomePage = () => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const { sortOption, handleSort } = useSort("");
-  const [loading, setLoading] = useState(false);
   const [totalCountries, setTotalCountries] = useState(250);
   const countriesPerPage = 24;
 
@@ -41,15 +39,6 @@ const HomePage = () => {
     countriesPerPage
   );
 
-  useEffect(() => {
-    setLoading(true);
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 150);
-
-    return () => clearTimeout(timer);
-  }, [searchQuery, sortOption, filterOption, currentPage]);
-
   const handleSearch = (query) => {
     setSearchQuery(query);
   };
@@ -68,27 +57,21 @@ const HomePage = () => {
         </div>
       </div>
 
-      {loading ? (
-        <Loader />
-      ) : (
-        <div>
-          <CountryList
-            searchQuery={searchQuery}
-            sortOption={sortOption}
-            filterOption={filterOption}
-            countriesPerPage={countriesPerPage}
-            currentPage={currentPage}
-            setTotalCountries={setTotalCountries}
-            totalCountries={totalCountries}
-            resetFilters={handleResetFilters}
-          />
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-          />
-        </div>
-      )}
+      <CountryList
+        searchQuery={searchQuery}
+        sortOption={sortOption}
+        filterOption={filterOption}
+        countriesPerPage={countriesPerPage}
+        currentPage={currentPage}
+        setTotalCountries={setTotalCountries}
+        totalCountries={totalCountries}
+        resetFilters={handleResetFilters}
+      />
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
       <a
         href="https://linktr.ee/ilkenza"
         target="_blank"

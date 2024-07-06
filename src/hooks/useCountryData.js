@@ -1,9 +1,19 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import DataComponent from "../components/DataComponent";
 
-const useCountryData = (setTotalCountries) => {
+const useCountryData = (
+    searchQuery,
+    sortOption,
+    filterOption,
+    countriesPerPage,
+    currentPage,
+    setTotalCountries, totalCountries
+) => {
     const [countries, setCountries] = useState([]);
-    const [filteredCountries, setFilteredCountries] = useState([]);
     const [loading, setLoading] = useState(true);
+    const { t } = useTranslation();
+    const { sortCountries } = DataComponent();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -24,8 +34,14 @@ const useCountryData = (setTotalCountries) => {
         fetchData();
     }, []);
 
+    useEffect(() => {
+        if (countries.length > 0) {
+            setLoading(false);
+        }
+    }, [countries]);
+
     const applyFilters = (countries, filters) => {
-        if (!countries.length) return;
+        if (!countries.length) return [];
         return countries.filter((country) => {
             const matchesUnMember =
                 !filters.unMember.length ||
@@ -45,8 +61,8 @@ const useCountryData = (setTotalCountries) => {
         });
     };
 
-    const filteredCountriess = (countries, searchQuery, t) => {
-        return countries.filter((country) => {
+    const filteredCountries = applyFilters(
+        countries.filter((country) => {
             const searchLower = searchQuery.toLowerCase();
             const translatedName = t(`country.${country.name}`).toLowerCase();
             const nameMatch = translatedName.includes(searchLower);
@@ -56,20 +72,24 @@ const useCountryData = (setTotalCountries) => {
                     typeof language === "string" &&
                     language.toLowerCase().includes(searchLower)
             );
-
             return nameMatch || languageMatch;
-        });
-    };
+        }),
+        filterOption
+    );
+
+    const sortedCountries = sortCountries(filteredCountries, sortOption);
+
+    const startIndex = (currentPage - 1) * countriesPerPage;
+    const endIndex = startIndex + countriesPerPage;
+    const displayedCountries = sortedCountries.slice(startIndex, endIndex);
 
     useEffect(() => {
-        if (countries.length > 0) {
-            const filtered = applyFilters(countries, {}); // Apply filters with initial empty filters
-            setFilteredCountries(filtered);
-            setTotalCountries(filtered.length);
+        if (setTotalCountries && totalCountries !== filteredCountries.length) {
+            setTotalCountries(filteredCountries.length);
         }
-    }, [countries, setTotalCountries]);
+    }, [filteredCountries.length, setTotalCountries, totalCountries]);
 
-    return { countries, loading, filteredCountries, applyFilters, filteredCountriess };
+    return { displayedCountries, loading, filteredCountries };
 };
 
 export default useCountryData;
