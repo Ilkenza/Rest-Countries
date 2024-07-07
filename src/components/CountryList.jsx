@@ -28,14 +28,15 @@ const CountryList = ({
     maxWidth1300,
   } = commonStyles;
 
-  const { displayedCountries, loading, filteredCountries } = useCountryData(
-    searchQuery,
-    sortOption,
-    filterOption,
-    countriesPerPage,
-    currentPage,
-    setTotalCountries
-  );
+  const { displayedCountries, loading, setLoading, filteredCountries } =
+    useCountryData(
+      searchQuery,
+      sortOption,
+      filterOption,
+      countriesPerPage,
+      currentPage,
+      setTotalCountries
+    );
 
   useEffect(() => {
     Aos.init({
@@ -44,6 +45,19 @@ const CountryList = ({
       once: true,
     });
   }, []);
+
+  useEffect(() => {
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery, sortOption, filterOption, currentPage]);
+
+  const fetchData = () => {
+    setLoading(true);
+
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+  };
 
   if (loading) {
     return <Loader />;

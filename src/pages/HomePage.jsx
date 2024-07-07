@@ -77,7 +77,7 @@ const HomePage = () => {
         target="_blank"
         className={`${textMode} ${underlinePy} hover:opacity-70`}
       >
-        {t("Madeby")} Korodić Ilija
+        {t("Madeby")} Korodic Ilija
       </a>
     </div>
   );

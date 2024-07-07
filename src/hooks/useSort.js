@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import useLocalStorage from "./useLocalStorage";
 
 const useSort = (initialSortOption = "") => {
-    const [sortOption, setSortOption] = useLocalStorage("sortOption", initialSortOption); // Čita iz lokalnog skladišta
+    const [sortOption, setSortOption] = useLocalStorage("sortOption", initialSortOption);
 
     const location = useLocation();
     const navigate = useNavigate();

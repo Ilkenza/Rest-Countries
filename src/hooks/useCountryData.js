@@ -89,7 +89,7 @@ const useCountryData = (
         }
     }, [filteredCountries.length, setTotalCountries, totalCountries]);
 
-    return { displayedCountries, loading, filteredCountries };
+    return { displayedCountries, loading, filteredCountries, setLoading };
 };
 
 export default useCountryData;
