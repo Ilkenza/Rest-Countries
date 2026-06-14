@@ -39,4 +39,3 @@ Filter.propTypes = {
 };
 
 export default Filter;
-//slike pexels istock shutterstock unsplash creative licence, boje iz asosiacije slike izvuci za nisu koju se radi i ne previse saturacije, ne vise od 2 boje za tekst, google fonts serif za skuplje sajtove, 2 do 3 fonta po sajtu, ilustracije flaticon uzimati pack da bi dobili isti izgled ikonica, google material icons, undraw.co, sketchappsources, storyset.com, behance dribble awwwards za dizajn sajtova insipracija,
