@@ -4,14 +4,14 @@ import { useTranslation } from "react-i18next";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { IoGlobeOutline } from "react-icons/io5";
 import { commonStyles } from "../styles/commonStyles";
-import DataComponent from "./DataComponent";
+import useDataComponent from "../hooks/useDataComponent";
 import useChangeLanguage from "../hooks/useChangeLanguage";
 
 function Languages() {
   const { t } = useTranslation();
   const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
   const sortingRef = useRef(null);
-  const { languages } = DataComponent();
+  const { languages } = useDataComponent();
   const {
     bgMode,
     flexCenterItems,
@@ -33,6 +33,9 @@ function Languages() {
         className={`${flexItemsCenterCol} relative border-text_light border-1`}
         onClick={() => setShowLanguageDropdown(!showLanguageDropdown)}
         ref={sortingRef}
+        aria-haspopup="listbox"
+        aria-expanded={showLanguageDropdown}
+        aria-label={t("selectLanguage")}
       >
         <div className={`${flexCenterItems} text-lg py-2 pl-2 min-[370px]:p-2`}>
           <IoGlobeOutline />

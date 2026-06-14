@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import useLocalStorage from "./useLocalStorage";
 
@@ -6,9 +6,14 @@ const useFilters = (initialFilters) => {
     const [filterOption, setFilterOption] = useLocalStorage("filterOption", initialFilters);
     const location = useLocation();
     const navigate = useNavigate();
+    const isInitialRun = useRef(true);
 
-    const updateURLParameters = (filters) => {
-        const params = new URLSearchParams();
+    const updateURLParameters = (filters, resetPage) => {
+        // Start from the current query so unrelated params (e.g. sort) survive.
+        const params = new URLSearchParams(location.search);
+        ["unMember", "region", "subRegion", "timeZone"].forEach((key) =>
+            params.delete(key)
+        );
         if (filters.unMember) {
             params.set("unMember", filters.unMember);
         }
@@ -20,6 +25,10 @@ const useFilters = (initialFilters) => {
         }
         if (filters.timeZone.length) {
             params.set("timeZone", filters.timeZone.join(","));
+        }
+        // Go back to the first page on an actual filter change.
+        if (resetPage) {
+            params.set("page", "1");
         }
         navigate(`?${params.toString()}`, { replace: true });
     };
@@ -45,7 +54,10 @@ const useFilters = (initialFilters) => {
     }, [location.search]);
 
     useEffect(() => {
-        updateURLParameters(filterOption);
+        // Don't reset the page on the initial hydration (preserves deep links);
+        // only reset it when the user actually changes a filter.
+        updateURLParameters(filterOption, !isInitialRun.current);
+        isInitialRun.current = false;
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filterOption]);
 

@@ -1,5 +1,5 @@
-/* eslint-disable react/prop-types */
 import { useEffect } from "react";
+import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { commonStyles } from "../styles/commonStyles";
@@ -12,7 +12,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
     window.scrollTo(0, 0);
   }, [currentPage]);
 
-  if (!totalPages > 1) return null;
+  if (totalPages <= 1) return null;
 
   return (
     <div className={`${flexCenter} my-10 mb-12`}>
@@ -44,6 +44,12 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
       </div>
     </div>
   );
+};
+
+Pagination.propTypes = {
+  currentPage: PropTypes.number.isRequired,
+  totalPages: PropTypes.number.isRequired,
+  onPageChange: PropTypes.func.isRequired,
 };
 
 export default Pagination;

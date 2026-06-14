@@ -27,6 +27,12 @@
   "yes": "Da",
   "no": "Ne",
   "Madeby": "Napravio",
+  "removeAllFilters": "Ukloni sve filtere",
+  "dataLoadError": "Nije moguće učitati podatke. Pokušajte ponovo.",
+  "errorTitle": "Nešto nije u redu",
+  "errorRetry": "Osveži",
+  "countryNotFound": "Država nije pronađena",
+  "selectLanguage": "Izaberi jezik",
   "region": {
     "Africa": "Afrika",
     "Americas": "Amerike",

@@ -10,7 +10,7 @@ i18n
     .init({
         supportedLngs: ['en', 'es', 'fr', 'pt', 'it', 'ru', 'sr'],
         fallbackLng: 'en',
-        debug: true,
+        debug: import.meta.env.DEV,
         detection: {
             order: ['path'],
             lookupFromPathIndex: 0,

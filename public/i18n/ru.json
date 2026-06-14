@@ -27,6 +27,12 @@
   "yes": "Да",
   "no": "Нет",
   "Madeby": "Сдeлaнo",
+  "removeAllFilters": "Удалить все фильтры",
+  "dataLoadError": "Не удалось загрузить данные. Попробуйте снова.",
+  "errorTitle": "Что-то пошло не так",
+  "errorRetry": "Перезагрузить",
+  "countryNotFound": "Страна не найдена",
+  "selectLanguage": "Выбрать язык",
   "region": {
     "Africa": "Африка",
     "Americas": "Америки",

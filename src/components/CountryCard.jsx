@@ -1,13 +1,14 @@
-/* eslint-disable react/prop-types */
+import { memo } from "react";
+import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router-dom";
 import { commonStyles } from "../styles/commonStyles";
-import DataComponent from "./DataComponent";
+import useDataComponent from "../hooks/useDataComponent";
 
 const CountryCard = ({ country }) => {
   const { t, i18n } = useTranslation();
   const translatedCountryName = t(`country.${country.name}`);
-  const { countryDetails } = DataComponent(country);
+  const { countryDetails } = useDataComponent(country);
   const { textMode, fontExtralight, bgMode, boldPb } = commonStyles;
 
   return (
@@ -31,4 +32,8 @@ const CountryCard = ({ country }) => {
   );
 };
 
-export default CountryCard;
+CountryCard.propTypes = {
+  country: PropTypes.object.isRequired,
+};
+
+export default memo(CountryCard);

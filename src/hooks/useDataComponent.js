@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 
-const DataComponent = (country, data) => {
-    const { t } = useTranslation();
+const useDataComponent = (country, data) => {
+    const { t, i18n } = useTranslation();
 
     const countryDetails = country ? [
         { label: t("populationn"), value: country.population.toLocaleString() },
@@ -35,16 +35,16 @@ const DataComponent = (country, data) => {
         switch (sortOption) {
             case "name-asc":
                 return translatedCountries.sort((a, b) =>
-                    a.translatedName.localeCompare(b.translatedName, "pt")
+                    a.translatedName.localeCompare(b.translatedName, i18n.language)
                 );
             case "name-desc":
                 return translatedCountries.sort((a, b) =>
-                    b.translatedName.localeCompare(a.translatedName, "pt")
+                    b.translatedName.localeCompare(a.translatedName, i18n.language)
                 );
             case "population-asc":
-                return countries.sort((a, b) => a.population - b.population);
+                return [...countries].sort((a, b) => a.population - b.population);
             case "population-desc":
-                return countries.sort((a, b) => b.population - a.population);
+                return [...countries].sort((a, b) => b.population - a.population);
             default:
                 return countries;
         }
@@ -109,4 +109,4 @@ const DataComponent = (country, data) => {
     return { countryDetails, details, sortCountries, languages, sortOptions, categories };
 };
 
-export default DataComponent;
+export default useDataComponent;

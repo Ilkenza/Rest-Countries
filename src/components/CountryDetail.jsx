@@ -1,14 +1,14 @@
-/* eslint-disable react/prop-types */
+import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { BsArrowLeft } from "react-icons/bs";
 import Empty from "./Empty";
 import { commonStyles } from "../styles/commonStyles";
-import DataComponent from "./DataComponent";
+import useDataComponent from "../hooks/useDataComponent";
 import { useCountryUtils } from "../utils/countryUtils";
 
 const CountryDetail = ({ country, allCountries }) => {
   const { t } = useTranslation();
-  const { details } = DataComponent(country);
+  const { details } = useDataComponent(country);
 
   const {
     textMode,
@@ -118,6 +118,11 @@ const CountryDetail = ({ country, allCountries }) => {
       </div>
     </div>
   );
+};
+
+CountryDetail.propTypes = {
+  country: PropTypes.object,
+  allCountries: PropTypes.array.isRequired,
 };
 
 export default CountryDetail;

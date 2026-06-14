@@ -1,5 +1,5 @@
-/* eslint-disable react/prop-types */
 import { useEffect } from "react";
+import PropTypes from "prop-types";
 import CountryCard from "./CountryCard";
 import { useTranslation } from "react-i18next";
 import Aos from "aos";
@@ -26,9 +26,10 @@ const CountryList = ({
     flexJCenter,
     flexCenterStartCol,
     maxWidth1300,
+    boldTextLG,
   } = commonStyles;
 
-  const { displayedCountries, loading, setLoading, filteredCountries } =
+  const { displayedCountries, loading, error, filteredCountries } =
     useCountryData(
       searchQuery,
       sortOption,
@@ -46,21 +47,16 @@ const CountryList = ({
     });
   }, []);
 
-  useEffect(() => {
-    fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchQuery, sortOption, filterOption, currentPage]);
-
-  const fetchData = () => {
-    setLoading(true);
-
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-  };
-
   if (loading) {
     return <Loader />;
+  }
+
+  if (error) {
+    return (
+      <div className={`${textMode} ${boldTextLG} my-10 sm:text-2xl`}>
+        {t("dataLoadError")}
+      </div>
+    );
   }
 
   if (filteredCountries.length === 0) {
@@ -81,14 +77,14 @@ const CountryList = ({
             className={`${textMode} underline cursor-pointer `}
             onClick={resetFilters}
           >
-            Ukloni sve filtere
+            {t("removeAllFilters")}
           </button>
         ) : null}
       </div>
       <ul className={`${flexJCenter} ${maxWidth1300}`}>
         {displayedCountries.map((country, index) => (
           <li
-            key={index}
+            key={country.alpha3Code}
             className={`${flexJCenter} w-[15.234rem] my-5 min-[350px]:m-10 `}
             data-aos="fade-up"
             data-aos-delay={(index % 6) * 100}
@@ -99,6 +95,17 @@ const CountryList = ({
       </ul>
     </div>
   );
+};
+
+CountryList.propTypes = {
+  searchQuery: PropTypes.string.isRequired,
+  sortOption: PropTypes.string.isRequired,
+  filterOption: PropTypes.object.isRequired,
+  countriesPerPage: PropTypes.number.isRequired,
+  currentPage: PropTypes.number.isRequired,
+  setTotalCountries: PropTypes.func.isRequired,
+  totalCountries: PropTypes.number.isRequired,
+  resetFilters: PropTypes.func.isRequired,
 };
 
 export default CountryList;

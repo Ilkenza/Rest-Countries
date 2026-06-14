@@ -1,3 +1,3 @@
 User-agent: *
-Disallow:
-Sitemap: https://www.example.com/sitemap.xml
+Allow: /
+Sitemap: https://restcountriescountry.netlify.app/sitemap.xml

@@ -1,5 +1,5 @@
-/* eslint-disable react/prop-types */
 import { useEffect } from "react";
+import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { commonStyles } from "../styles/commonStyles";
@@ -11,14 +11,14 @@ const SearchBar = ({ onSearch }) => {
 
   const { textMode, bgMode, flexCenterItems } = commonStyles;
 
+  // Debounce the search so the country list isn't re-filtered on every keystroke.
   useEffect(() => {
-    onSearch(searchQuery);
+    const timeoutId = setTimeout(() => onSearch(searchQuery), 300);
+    return () => clearTimeout(timeoutId);
   }, [onSearch, searchQuery]);
 
   const handleSearchChange = (e) => {
-    const value = e.target.value;
-    setSearchQuery(value);
-    onSearch(value);
+    setSearchQuery(e.target.value);
   };
 
   return (
@@ -35,6 +35,10 @@ const SearchBar = ({ onSearch }) => {
       />
     </div>
   );
+};
+
+SearchBar.propTypes = {
+  onSearch: PropTypes.func.isRequired,
 };
 
 export default SearchBar;

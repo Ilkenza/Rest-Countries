@@ -27,6 +27,12 @@
   "yes": "Sim",
   "no": "Não",
   "Madeby": "Feito por",
+  "removeAllFilters": "Remover todos os filtros",
+  "dataLoadError": "Não foi possível carregar os dados. Tente novamente.",
+  "errorTitle": "Algo deu errado",
+  "errorRetry": "Recarregar",
+  "countryNotFound": "País não encontrado",
+  "selectLanguage": "Selecionar idioma",
   "region": {
     "Africa": "África",
     "Americas": "Américas",

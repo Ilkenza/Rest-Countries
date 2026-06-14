@@ -1,5 +1,5 @@
-/* eslint-disable react/prop-types */
 import { useState } from "react";
+import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { MdFilterAlt } from "react-icons/md";
 import FilterPopup from "./FilterPopup";
@@ -33,4 +33,10 @@ const Filter = ({ onFilter, filterOption }) => {
   );
 };
 
+Filter.propTypes = {
+  onFilter: PropTypes.func.isRequired,
+  filterOption: PropTypes.object.isRequired,
+};
+
 export default Filter;
+//slike pexels istock shutterstock unsplash creative licence, boje iz asosiacije slike izvuci za nisu koju se radi i ne previse saturacije, ne vise od 2 boje za tekst, google fonts serif za skuplje sajtove, 2 do 3 fonta po sajtu, ilustracije flaticon uzimati pack da bi dobili isti izgled ikonica, google material icons, undraw.co, sketchappsources, storyset.com, behance dribble awwwards za dizajn sajtova insipracija,

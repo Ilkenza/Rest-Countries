@@ -24,6 +24,15 @@ const usePagination = (initialPage, totalItems, itemsPerPage) => {
         navigate({ search: queryParams.toString() });
     };
 
+    // If the result set shrinks (e.g. after filtering/searching) and the current
+    // page no longer exists, fall back to the first page so the list isn't blank.
+    useEffect(() => {
+        if (totalPages > 0 && currentPage > totalPages) {
+            handlePageChange(1);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [totalPages]);
+
     return { currentPage, totalPages, handlePageChange };
 };
 

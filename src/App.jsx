@@ -10,36 +10,39 @@ import CountryPage from "./pages/CountryPage";
 import Header from "./components/Header";
 import PageNotFound from "./pages/PageNotFound";
 import BigLoader from "./components/BigLoader";
+import ErrorBoundary from "./components/ErrorBoundary";
+import Footer from "./components/Footer";
 import { useTranslation } from "react-i18next";
 
 const App = () => {
-  const [loading, setLoading] = useState(true);
-  const { i18n } = useTranslation();
+  const { i18n, ready } = useTranslation();
+  // Show the splash loader until translations are ready, then latch it off so
+  // switching languages later never brings back the full-screen loader.
+  const [appReady, setAppReady] = useState(ready);
 
   useEffect(() => {
-    const loadingTimeout = setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-
-    return () => clearTimeout(loadingTimeout);
-  }, []);
+    if (ready) setAppReady(true);
+  }, [ready]);
 
   return (
     <Router>
-      {loading ? (
+      {!appReady ? (
         <BigLoader />
       ) : (
         <Suspense fallback="Loading...">
           <Header />
-          <Routes>
-            <Route path="/" element={<Navigate to={`/${i18n.language}`} />} />
-            <Route path="/:language" element={<HomePage />} />
-            <Route
-              path="/:language/country/:countryCode"
-              element={<CountryPage />}
-            />
-            <Route path="*" element={<PageNotFound />} />
-          </Routes>
+          <ErrorBoundary>
+            <Routes>
+              <Route path="/" element={<Navigate to={`/${i18n.language}`} />} />
+              <Route path="/:language" element={<HomePage />} />
+              <Route
+                path="/:language/country/:countryCode"
+                element={<CountryPage />}
+              />
+              <Route path="*" element={<PageNotFound />} />
+            </Routes>
+          </ErrorBoundary>
+          <Footer />
         </Suspense>
       )}
     </Router>

@@ -1,126 +1,65 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import { fetchCountries } from "../utils/fetchCountries";
+import { getAvailableFacets } from "../utils/countryFilters";
 
 const useFilterLogic = (initialFilters) => {
   const [filters, setFilters] = useState(initialFilters);
-  const [data, setData] = useState({
-    regions: [],
-    subRegions: [],
-    timeZones: [],
-    allRegions: [],
-    allSubRegions: [],
-    allTimeZones: [],
-  });
+  const [allCountries, setAllCountries] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     setFilters(initialFilters);
   }, [initialFilters]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch("/data.json");
-      const countries = await response.json();
+    let active = true;
 
-      const regions = new Set();
-      const subRegions = new Set();
-      const timeZones = new Set();
-
-      countries.forEach((country) => {
-        if (country.region) {
-          regions.add(country.region);
-        }
-        if (country.subregion) {
-          subRegions.add(country.subregion);
-        }
-        if (country.timezones) {
-          country.timezones.forEach((timezone) => timeZones.add(timezone));
-        }
+    fetchCountries()
+      .then((countries) => {
+        if (!active) return;
+        setAllCountries(countries);
+        setError(false);
+      })
+      .catch((err) => {
+        console.error("Error loading filter data:", err);
+        if (active) setError(true);
+      })
+      .finally(() => {
+        if (active) setLoading(false);
       });
-
-      setData({
-        regions: Array.from(regions).sort(),
-        subRegions: Array.from(subRegions).sort(),
-        timeZones: Array.from(timeZones).sort(),
-        allRegions: Array.from(regions).sort(),
-        allSubRegions: Array.from(subRegions).sort(),
-        allTimeZones: Array.from(timeZones).sort(),
-      });
-
-      setLoading(false);
-    };
-
-    fetchData();
-    document.body.style.overflow = "hidden";
 
     return () => {
-      document.body.style.overflow = "auto";
+      active = false;
     };
   }, []);
 
+  // Available options per category, narrowed by the selections in the OTHER
+  // categories (faceted/cascading behavior).
+  const data = useMemo(
+    () => getAvailableFacets(allCountries, filters),
+    [allCountries, filters]
+  );
+
+  // Drop any selected values that are no longer available after narrowing, so
+  // an incompatible leftover selection can't blank out the country list.
   useEffect(() => {
-    if (filters.unMember === "") {
-      setData((prevData) => ({
-        ...prevData,
-        regions: [...prevData.allRegions],
-        subRegions: [...prevData.allSubRegions],
-        timeZones: [...prevData.allTimeZones],
-      }));
-      return;
-    }
+    if (!allCountries.length) return;
+    setFilters((prev) => {
+      const region = prev.region.filter((r) => data.regions.includes(r));
+      const subRegion = prev.subRegion.filter((s) =>
+        data.subRegions.includes(s)
+      );
+      const timeZone = prev.timeZone.filter((t) => data.timeZones.includes(t));
 
-    const resetInvalidFilters = async () => {
-      const response = await fetch("/data.json");
-      const countries = await response.json();
+      const changed =
+        region.length !== prev.region.length ||
+        subRegion.length !== prev.subRegion.length ||
+        timeZone.length !== prev.timeZone.length;
 
-      const validRegions = new Set();
-      const validSubRegions = new Set();
-      const validTimeZones = new Set();
-
-      countries.forEach((country) => {
-        if (String(country.unMember) === filters.unMember) {
-          if (country.region) validRegions.add(country.region);
-          if (country.subregion) validSubRegions.add(country.subregion);
-          if (country.timezones) {
-            country.timezones.forEach((timezone) =>
-              validTimeZones.add(timezone)
-            );
-          }
-        }
-      });
-
-      setData((prevData) => ({
-        ...prevData,
-        regions: Array.from(validRegions).sort(),
-        subRegions: Array.from(validSubRegions).sort(),
-        timeZones: Array.from(validTimeZones).sort(),
-      }));
-
-      setFilters((prevFilters) => ({
-        ...prevFilters,
-        region: prevFilters.region.filter((r) => validRegions.has(r)),
-        subRegion: prevFilters.subRegion.filter((sr) =>
-          validSubRegions.has(sr)
-        ),
-        timeZone: prevFilters.timeZone.filter((tz) => validTimeZones.has(tz)),
-      }));
-    };
-
-    resetInvalidFilters();
-  }, [filters.unMember]);
-
-  const getFilteredData = () => {
-    const filteredRegions = filters.timeZone.length > 0 || filters.subRegion.length > 0 || filters.unMember !== ""
-      ? data.regions
-      : data.allRegions;
-    const filteredSubRegions = filters.region.length > 0 || filters.timeZone.length > 0 || filters.unMember !== ""
-      ? data.subRegions
-      : data.allSubRegions;
-    const filteredTimeZones = filters.region.length > 0 || filters.subRegion.length > 0 || filters.unMember !== ""
-      ? data.timeZones
-      : data.allTimeZones;
-
-    return { regions: filteredRegions, subRegions: filteredSubRegions, timeZones: filteredTimeZones };
-  };
+      return changed ? { ...prev, region, subRegion, timeZone } : prev;
+    });
+  }, [data, allCountries.length]);
 
   const handleCheckboxChange = (e) => {
     const { name, value } = e.target;
@@ -128,10 +67,7 @@ const useFilterLogic = (initialFilters) => {
     if (name === "unMember") {
       setFilters((prevFilters) => ({
         ...prevFilters,
-        [name]: prevFilters[name] === value ? "" : value,
-        region: [],
-        subRegion: [],
-        timeZone: [],
+        unMember: prevFilters.unMember === value ? "" : value,
       }));
     } else {
       setFilters((prevFilters) => ({
@@ -143,7 +79,7 @@ const useFilterLogic = (initialFilters) => {
     }
   };
 
-  return { filters, data, loading, handleCheckboxChange, getFilteredData };
+  return { filters, data, loading, error, handleCheckboxChange };
 };
 
 export default useFilterLogic;

@@ -10,9 +10,14 @@ const useClickOutside = (ref, onClose) => {
       }
     };
 
-    document.addEventListener("click", handleClickOutside);
+    // Defer attaching the listener by one tick so the very click that opens
+    // the element doesn't immediately count as an "outside" click and close it.
+    const timeoutId = setTimeout(() => {
+      document.addEventListener("click", handleClickOutside);
+    }, 0);
 
     return () => {
+      clearTimeout(timeoutId);
       document.removeEventListener("click", handleClickOutside);
     };
   }, [ref, onClose]);

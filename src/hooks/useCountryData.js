@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import DataComponent from "../components/DataComponent";
+import useDataComponent from "./useDataComponent";
+import { fetchCountries } from "../utils/fetchCountries";
+import { applyFilters, paginate } from "../utils/countryFilters";
 
 const useCountryData = (
     searchQuery,
@@ -8,58 +10,36 @@ const useCountryData = (
     filterOption,
     countriesPerPage,
     currentPage,
-    setTotalCountries, totalCountries
+    setTotalCountries
 ) => {
     const [countries, setCountries] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
     const { t } = useTranslation();
-    const { sortCountries } = DataComponent();
+    const { sortCountries } = useDataComponent();
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await fetch("/data.json");
-                if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                }
-                const data = await response.json();
+        let active = true;
+        setLoading(true);
+
+        fetchCountries()
+            .then((data) => {
+                if (!active) return;
                 setCountries(data);
-                setLoading(false);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-                setLoading(false);
-            }
+                setError(false);
+            })
+            .catch((err) => {
+                console.error("Error fetching data:", err);
+                if (active) setError(true);
+            })
+            .finally(() => {
+                if (active) setLoading(false);
+            });
+
+        return () => {
+            active = false;
         };
-
-        fetchData();
     }, []);
-
-    useEffect(() => {
-        if (countries.length > 0) {
-            setLoading(false);
-        }
-    }, [countries]);
-
-    const applyFilters = (countries, filters) => {
-        if (!countries.length) return [];
-        return countries.filter((country) => {
-            const matchesUnMember =
-                !filters.unMember.length ||
-                filters.unMember.includes(String(country.unMember));
-            const matchesRegion =
-                !filters.region.length || filters.region.includes(country.region);
-            const matchesSubRegion =
-                !filters.subRegion.length ||
-                filters.subRegion.includes(country.subregion);
-            const matchesTimeZone =
-                !filters.timeZone.length ||
-                filters.timeZone.some((tz) => country.timezones.includes(tz));
-
-            return (
-                matchesUnMember && matchesRegion && matchesSubRegion && matchesTimeZone
-            );
-        });
-    };
 
     const filteredCountries = applyFilters(
         countries.filter((country) => {
@@ -79,17 +59,19 @@ const useCountryData = (
 
     const sortedCountries = sortCountries(filteredCountries, sortOption);
 
-    const startIndex = (currentPage - 1) * countriesPerPage;
-    const endIndex = startIndex + countriesPerPage;
-    const displayedCountries = sortedCountries.slice(startIndex, endIndex);
+    const displayedCountries = paginate(
+        sortedCountries,
+        currentPage,
+        countriesPerPage
+    );
 
     useEffect(() => {
-        if (setTotalCountries && totalCountries !== filteredCountries.length) {
+        if (setTotalCountries) {
             setTotalCountries(filteredCountries.length);
         }
-    }, [filteredCountries.length, setTotalCountries, totalCountries]);
+    }, [filteredCountries.length, setTotalCountries]);
 
-    return { displayedCountries, loading, filteredCountries, setLoading };
+    return { displayedCountries, loading, error, filteredCountries };
 };
 
 export default useCountryData;

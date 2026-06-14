@@ -1,7 +1,7 @@
-/* eslint-disable react/prop-types */
+import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { commonStyles } from "../styles/commonStyles";
-import DataComponent from "./DataComponent";
+import useDataComponent from "../hooks/useDataComponent";
 
 const FilterCategories = ({ data, filters, handleCheckboxChange }) => {
   const { t } = useTranslation();
@@ -15,49 +15,51 @@ const FilterCategories = ({ data, filters, handleCheckboxChange }) => {
     gridColsTwo,
   } = commonStyles;
 
-  const { categories } = DataComponent(null, data);
+  const { categories } = useDataComponent(null, data);
 
   return (
     <>
       {categories.map((category) => (
         <div key={category.name} className="mb-4">
-          <label className={`${textMode} ${blockBoldMb}`}>
-            {category.label}
-          </label>
+          <p className={`${textMode} ${blockBoldMb}`}>{category.label}</p>
           <div
             className={`${
               category.name === "unMember" ? gridColsTwo : gridColsDefault
-            }pr-6`}
+            } pr-6`}
           >
             {category.data.map((item) => (
-              <div
+              <label
                 key={item.value}
-                className={`${flexCenterItems} ${spaceX} w-56`}
+                className={`${flexCenterItems} ${spaceX} w-56 cursor-pointer`}
               >
-                <label className="flex">
-                  <input
-                    type="checkbox"
-                    name={category.name}
-                    value={item.value}
-                    onChange={handleCheckboxChange}
-                    checked={
-                      Array.isArray(filters[category.name])
-                        ? filters[category.name].includes(item.value)
-                        : filters[category.name] === item.value
-                    }
-                    className="ui-checkbox"
-                  />
-                </label>
+                <input
+                  type="checkbox"
+                  name={category.name}
+                  value={item.value}
+                  onChange={handleCheckboxChange}
+                  checked={
+                    Array.isArray(filters[category.name])
+                      ? filters[category.name].includes(item.value)
+                      : filters[category.name] === item.value
+                  }
+                  className="ui-checkbox"
+                />
                 <span className={`${textMode} ${fontExtralight}`}>
                   {category.translate ? t(item.label) : item.label}
                 </span>
-              </div>
+              </label>
             ))}
           </div>
         </div>
       ))}
     </>
   );
+};
+
+FilterCategories.propTypes = {
+  data: PropTypes.object.isRequired,
+  filters: PropTypes.object.isRequired,
+  handleCheckboxChange: PropTypes.func.isRequired,
 };
 
 export default FilterCategories;
